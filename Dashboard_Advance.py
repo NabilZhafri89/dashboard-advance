@@ -9,6 +9,216 @@ from datetime import datetime
 
 st.set_page_config(page_title="Dashboard Advance", layout="wide")
 
+st.markdown("""
+<style>
+h1 {
+  color: #00ff00;   /* hijau terang */
+  font-weight: 700;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+st.markdown("""
+<style>
+
+/* Buang bar atas (deploy/menu) + garisan atas */
+header[data-testid="stHeader"],
+div[data-testid="stToolbar"],
+div[data-testid="stDecoration"] {
+  display: none !important;
+  height: 0 !important;
+}
+
+/* IMPORTANT: samakan padding TOP main & sidebar (ubah nilai ni kalau nak naik/turun) */
+:root { --topPad: 1.2rem; }
+
+/* MAIN CONTENT naik */
+div.block-container {
+  padding-top: var(--topPad) !important;
+}
+
+/* SIDEBAR content ikut sama tinggi */
+section[data-testid="stSidebar"] > div:first-child {
+  padding-top: var(--topPad) !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* PAGE BACKGROUND */
+html, body, [data-testid="stAppViewContainer"] {
+    background-color: #e6e6fa !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+st.markdown("""
+<style>
+
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] p {
+    color: white !important;
+}
+
+
+/* Placeholder text (kalau ada) */
+section[data-testid="stSidebar"] div[data-baseweb="select"] input::placeholder {
+    color: #536878 !important;
+}
+
+/* Dropdown list item text */
+div[role="listbox"] span {
+    color: #536878 !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+st.markdown("""
+<style>
+
+/* SIDEBAR BACKGROUND */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #B58CFF 0%,
+        #8EA2FF 50%,
+        #7B9CFF 100%
+    ) !important;
+}
+
+
+}
+
+/* Sidebar header */
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    color: white !important;
+}
+
+/* Selectbox / input background */
+section[data-testid="stSidebar"] .stSelectbox,
+section[data-testid="stSidebar"] .stMultiSelect {
+    background-color: rgba(255,255,255,0.15);
+    border-radius: 10px;
+}
+
+
+
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+
+/* CHART CARD */
+div[data-testid="stPlotlyChart"]{
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px 18px 12px 18px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  overflow: visible;
+}
+
+/* KPI CARD (st.metric) */
+div[data-testid="stMetric"]{
+  background: linear-gradient(
+     135deg,
+     #7B9CFF 0%,
+     #B58CFF 100%
+  );
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+
+
+/* KPI label */
+div[data-testid="stMetric"] label{
+  color: #f0f8ff;
+  font-size: 14px;
+}
+
+/* KPI value */
+div[data-testid="stMetric"] [data-testid="stMetricValue"]{
+  color: #f8f8ff;
+  font-weight: 700;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* Kotak keliling chart Plotly */
+div[data-testid="stPlotlyChart"]{
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px 18px 12px 18px;
+  margin-bottom: 24px;
+
+  /* shadow sahaja, no border */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+
+  overflow: visible;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+
+/* BUANG SHADOW CHART */
+div[data-testid="stPlotlyChart"] {
+    box-shadow: none !important;
+}
+
+/* BUANG SHADOW KPI CARD */
+div[data-testid="stMetric"] {
+    box-shadow: none !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+
+/* BUANG SEMUA GARISAN <hr> */
+hr {
+    display: none !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+/* Tukar warna tajuk st.title() */
+div[data-testid="stAppViewContainer"] div[data-testid="stMarkdownContainer"] h1,
+div[data-testid="stAppViewContainer"] h1 {
+  color: #4b0082 !important;
+}
+</style>
+""", unsafe_allow_html=True)
 # -------------------------
 # File paths
 # -------------------------
@@ -22,6 +232,7 @@ CSV_BEKALAN = BASE_FOLDER / "GL Advance bekalan.csv"
 CSV_DIRI    = BASE_FOLDER / "GL Advance diri.csv"
 CSV_PTJ     = BASE_FOLDER / "DimPTJ.csv"   # PTJ file
 CSV_STAF_DIRI = BASE_FOLDER / "LIST ID STAF ADVANCE DIRI.csv"
+
 
 
 # -------------------------
@@ -275,7 +486,7 @@ def add_tempoh_column(df: pd.DataFrame) -> pd.DataFrame:
 # -------------------------
 # UI
 # -------------------------
-st.title("Dashboard Advance")
+st.title("Dashboard Pendahuluan Diri dan Bekalan")
 
 # -------------------------
 # SLICER – Jenis Pendahuluan
@@ -392,20 +603,18 @@ if not df_all_bar.empty:
         .sum()
     )
 
-    # --- Sort: HQ first, then by value descending ---
     df_bar_agg["is_HQ"] = (df_bar_agg["PTJ"] == "HQ").astype(int)
     df_bar_agg = df_bar_agg.sort_values(
         by=["is_HQ", "Amount in local currency"],
         ascending=[False, False]
     )
 
-    # --- Format numbers for labels ---
     def format_number(n):
         n = float(n)
         if abs(n) >= 1_000_000:
             return f"{n/1_000_000:.1f} M"
-        elif abs(n) >= 1000:
-            return f"{n/1000:.1f} K"
+        elif abs(n) >= 1_000:
+            return f"{n/1_000:.1f} K"
         else:
             return f"{n:,.0f}"
 
@@ -418,34 +627,51 @@ if not df_all_bar.empty:
         text="Label"
     )
 
-    # Force x-axis category order to match sorted dataframe
     fig.update_xaxes(
         categoryorder="array",
         categoryarray=df_bar_agg["PTJ"].tolist(),
-        showgrid=False
+        showgrid=False,
+        automargin=True
     )
 
-    # --- Clean layout ---
+    # Warna bar (turquoise) + buang outline
+    fig.update_traces(
+        marker_color="#bf94e4",
+        marker_line_width=0,
+        marker_cornerradius="50%",
+        textposition="outside",
+        cliponaxis=False
+    )
+
     fig.update_layout(
+        title=dict(
+            text="Jumlah Baki Pendahuluan Mengikut PTJ",
+            x=0.0,
+            xanchor="left",
+            font=dict(size=18)
+        ),
         xaxis_title=None,
         yaxis_title=None,
         yaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
         plot_bgcolor="white",
         paper_bgcolor="white",
-        title=None,
-        margin=dict(l=0, r=0, t=0, b=0)
+        uniformtext_minsize=10,
+        uniformtext_mode="hide",
+        margin=dict(l=0, r=60, t=60, b=0)
     )
 
-    # --- Bar label styling ---
-    fig.update_traces(
-        textposition="outside",
-        cliponaxis=False
+    st.plotly_chart(
+        fig,
+        use_container_width=True,
+        config={"displayModeBar": False}
     )
-
-    st.plotly_chart(fig, use_container_width=True)
 
 else:
     st.info("Tiada data untuk dipaparkan dalam carta bagi kombinasi tapisan semasa.")
+
+
+
+
 
 
 
@@ -488,6 +714,8 @@ df_bekalan_display["Amount in local currency"] = (
     .astype(float)
     .map("{:,.2f}".format)
 )
+
+
 
 st.dataframe(df_bekalan_display, use_container_width=True)
 
