@@ -9,42 +9,40 @@ from datetime import datetime
 
 st.set_page_config(page_title="Dashboard Advance", layout="wide")
 
+st.markdown("""
+<style>
+section[data-testid="stSidebar"] { 
+  position: relative; 
+}
+
+.sidebar-bottom {
+  position: sticky;
+  bottom: 12px;
+  margin-top: 24px;
+  z-index: 999;
+}
+
 .update-card {
-  background: linear-gradient(50deg, #e6e6fa, #9B6CFF);
+  background: #966fd6;
   color: white;
   padding: 14px 16px;
   border-radius: 14px;
+  box-shadow: none;
   border: none;
-  box-shadow:
-    0 6px 16px rgba(0,0,0,0.15),
-    inset 0 0 0 1px rgba(255,255,255,0.12);
 }
 
-st.markdown("""
-<style>
-/* ===== TABLE AUTO-FIT ===== */
-
-/* Wrap text untuk column panjang */
-div[data-testid="stDataFrame"] tbody td {
-    white-space: normal !important;
-    word-break: break-word !important;
-    line-height: 1.3;
-    padding-top: 6px !important;
-    padding-bottom: 6px !important;
+.update-card .title {
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-/* Header pun wrap */
-div[data-testid="stDataFrame"] thead th {
-    white-space: normal !important;
-    line-height: 1.2;
-}
-
-/* Kurangkan minimum lebar column */
-div[data-testid="stDataFrame"] table {
-    table-layout: auto !important;
+.update-card .date {
+  font-size: 16px;
+  font-weight: 800;
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 st.markdown("""
@@ -247,8 +245,6 @@ div[data-testid="stAppViewContainer"] h1 {
 # -------------------------
 # File paths
 # -------------------------
-from pathlib import Path
-
 BASE_FOLDER = Path(__file__).parent
 
 
@@ -258,6 +254,14 @@ CSV_DIRI    = BASE_FOLDER / "GL Advance diri.csv"
 CSV_PTJ     = BASE_FOLDER / "DimPTJ.csv"   # PTJ file
 CSV_STAF_DIRI = BASE_FOLDER / "LIST ID STAF ADVANCE DIRI.csv"
 
+from datetime import datetime
+import os
+
+def get_last_modified_date(*paths):
+    latest_ts = max(os.path.getmtime(p) for p in paths if os.path.exists(p))
+    return datetime.fromtimestamp(latest_ts).strftime("%d %b %Y")
+
+last_update = get_last_modified_date(CSV_BEKALAN, CSV_DIRI)
 
 
 # -------------------------
@@ -526,32 +530,42 @@ st.title("Dashboard Pendahuluan Diri dan Bekalan")
 with st.sidebar:
     st.header("Tapisan")
 
-    # Combine data and add Tempoh for slicer
     all_data = pd.concat([load_bekalan(), load_diri()], ignore_index=True)
     all_data = add_tempoh_column(all_data)
 
-    # --- 1) JENIS PENDAHULUAN ---
     jenis_list = ["All"] + sorted(all_data["Detail"].dropna().unique().tolist())
     selected_jenis = st.selectbox("Jenis Pendahuluan", jenis_list)
 
-    # Filter PTJ options based on Jenis
     if selected_jenis != "All":
         data_for_ptj = all_data[all_data["Detail"] == selected_jenis]
     else:
         data_for_ptj = all_data
 
-    # --- 2) PTJ ---
     ptj_list = ["All"] + sorted(data_for_ptj["BAHAGIAN/UNIT"].dropna().unique().tolist())
     selected_ptj = st.selectbox("PTJ", ptj_list)
 
-    # Filter Tempoh options based on Jenis + PTJ (fully cascading)
     data_for_tempoh = data_for_ptj.copy()
     if selected_ptj != "All":
         data_for_tempoh = data_for_tempoh[data_for_tempoh["BAHAGIAN/UNIT"] == selected_ptj]
 
-    # --- 3) TEMPOH ---
     tempoh_list = ["All"] + sorted(data_for_tempoh["Tempoh"].dropna().unique().tolist())
     selected_tempoh = st.selectbox("Tempoh", tempoh_list)
+
+    # ===== TARIKH KEMASKINI (BWH SEKALI) =====
+    st.markdown("<div style='height: 24px;'></div>", unsafe_allow_html=True)
+
+    st.markdown(
+        f"""
+        <div class="sidebar-bottom">
+          <div class="update-card">
+            <div class="title">Tarikh Kemaskini:</div>
+            <div class="date">{last_update}</div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 
 
