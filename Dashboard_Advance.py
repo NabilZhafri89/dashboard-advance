@@ -257,6 +257,10 @@ CSV_STAF_DIRI = BASE_FOLDER / "LIST ID STAF ADVANCE DIRI.csv"
 from datetime import datetime
 import os
 
+
+def file_token(p: Path) -> float:
+    return os.path.getmtime(p) if p.exists() else 0.0
+
 def get_last_modified_date(*paths):
     latest_ts = max(os.path.getmtime(p) for p in paths if os.path.exists(p))
     return datetime.fromtimestamp(latest_ts).strftime("%d %b %Y")
@@ -330,11 +334,11 @@ def apply_ptj_hq_logic(df: pd.DataFrame, df_ptj: pd.DataFrame) -> pd.DataFrame:
 # -------------------------
 # Loaders
 # -------------------------
-@st.cache_data
+
 def load_ptj():
     return pd.read_csv(CSV_PTJ)
 
-@st.cache_data
+
 def load_staf_diri():
     df = pd.read_csv(CSV_STAF_DIRI)
 
@@ -349,7 +353,7 @@ def load_staf_diri():
 
     return df
 
-@st.cache_data
+
 def load_staff_master():
     df = pd.read_csv(BASE_FOLDER / "ID NAMA STAF.csv")
 
@@ -359,7 +363,7 @@ def load_staff_master():
     return df
 
 
-@st.cache_data
+
 def load_bekalan():
     df = pd.read_csv(CSV_BEKALAN)
     df_ptj = load_ptj()
@@ -402,7 +406,7 @@ def load_bekalan():
     return df
 
 
-@st.cache_data
+
 def load_diri():
     df = pd.read_csv(CSV_DIRI)
     df_ptj = load_ptj()
