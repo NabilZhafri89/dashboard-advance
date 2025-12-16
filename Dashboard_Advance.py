@@ -124,15 +124,7 @@ section[data-testid="stSidebar"] .stMultiSelect {
 st.markdown("""
 <style>
 
-/* CHART CARD */
-div[data-testid="stPlotlyChart"]{
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 18px 18px 12px 18px;
-  margin-bottom: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  overflow: visible;
-}
+
 
 /* KPI CARD (st.metric) */
 div[data-testid="stMetric"]{
@@ -167,12 +159,7 @@ div[data-testid="stMetric"] [data-testid="stMetricValue"]{
 
 st.markdown("""
 <style>
-/* Kotak keliling chart Plotly */
-div[data-testid="stPlotlyChart"]{
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 18px 18px 12px 18px;
-  margin-bottom: 24px;
+
 
   /* shadow sahaja, no border */
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
