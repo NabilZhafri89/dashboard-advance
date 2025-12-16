@@ -9,6 +9,17 @@ from datetime import datetime
 
 st.set_page_config(page_title="Dashboard Advance", layout="wide")
 
+.update-card {
+  background: linear-gradient(50deg, #e6e6fa, #9B6CFF);
+  color: white;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: none;
+  box-shadow:
+    0 6px 16px rgba(0,0,0,0.15),
+    inset 0 0 0 1px rgba(255,255,255,0.12);
+}
+
 st.markdown("""
 <style>
 /* ===== TABLE AUTO-FIT ===== */
