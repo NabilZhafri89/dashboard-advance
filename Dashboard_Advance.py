@@ -11,6 +11,33 @@ st.set_page_config(page_title="Dashboard Advance", layout="wide")
 
 st.markdown("""
 <style>
+/* ===== TABLE AUTO-FIT ===== */
+
+/* Wrap text untuk column panjang */
+div[data-testid="stDataFrame"] tbody td {
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.3;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+}
+
+/* Header pun wrap */
+div[data-testid="stDataFrame"] thead th {
+    white-space: normal !important;
+    line-height: 1.2;
+}
+
+/* Kurangkan minimum lebar column */
+div[data-testid="stDataFrame"] table {
+    table-layout: auto !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+st.markdown("""
+<style>
 h1 {
   color: #00ff00;   /* hijau terang */
   font-weight: 700;
