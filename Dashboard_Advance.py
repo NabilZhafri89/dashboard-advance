@@ -55,31 +55,6 @@ h1 {
 """, unsafe_allow_html=True)
 
 
-st.markdown("""
-<style>
-/* Jangan hide header (kalau hide, toggle sidebar hilang) */
-header[data-testid="stHeader"]{
-  background: transparent !important;
-  box-shadow: none !important;
-  height: 3rem !important;      /* kekalkan ruang sikit untuk toggle */
-}
-
-/* Toolbar & decoration boleh hide kalau nak kemas */
-div[data-testid="stToolbar"],
-div[data-testid="stDecoration"]{
-  display: none !important;
-  height: 0 !important;
-}
-
-/* OPTIONAL: bagi toggle button nampak jelas */
-header[data-testid="stHeader"] [data-testid="stSidebarCollapseButton"]{
-  opacity: 1 !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
 
 st.markdown("""
 <style>
