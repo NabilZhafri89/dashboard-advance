@@ -469,6 +469,19 @@ def add_tempoh_column(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+st.markdown("""
+<style>
+/* ===== KECILKAN FONT TABLE ===== */
+div[data-testid="stDataFrame"] tbody tr td {
+    font-size: 12px !important;
+}
+
+div[data-testid="stDataFrame"] thead tr th {
+    font-size: 13px !important;
+    font-weight: 600;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # -------------------------
 # UI
