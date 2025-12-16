@@ -57,30 +57,27 @@ h1 {
 
 st.markdown("""
 <style>
+/* Jangan hide header (kalau hide, toggle sidebar hilang) */
+header[data-testid="stHeader"]{
+  background: transparent !important;
+  box-shadow: none !important;
+  height: 3rem !important;      /* kekalkan ruang sikit untuk toggle */
+}
 
-/* Buang bar atas (deploy/menu) + garisan atas */
-header[data-testid="stHeader"],
+/* Toolbar & decoration boleh hide kalau nak kemas */
 div[data-testid="stToolbar"],
-div[data-testid="stDecoration"] {
+div[data-testid="stDecoration"]{
   display: none !important;
   height: 0 !important;
 }
 
-/* IMPORTANT: samakan padding TOP main & sidebar (ubah nilai ni kalau nak naik/turun) */
-:root { --topPad: 1.2rem; }
-
-/* MAIN CONTENT naik */
-div.block-container {
-  padding-top: var(--topPad) !important;
+/* OPTIONAL: bagi toggle button nampak jelas */
+header[data-testid="stHeader"] [data-testid="stSidebarCollapseButton"]{
+  opacity: 1 !important;
 }
-
-/* SIDEBAR content ikut sama tinggi */
-section[data-testid="stSidebar"] > div:first-child {
-  padding-top: var(--topPad) !important;
-}
-
 </style>
 """, unsafe_allow_html=True)
+
 
 
 
