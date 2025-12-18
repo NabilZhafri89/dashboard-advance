@@ -546,7 +546,7 @@ with st.sidebar:
     if st.button("🔄 Refresh Data", use_container_width=True):
         st.session_state.pop("df_bekalan_raw", None)
         st.session_state.pop("df_diri_raw", None)
-        st.experimental_rerun()
+        st.rerun()
 
 
 
