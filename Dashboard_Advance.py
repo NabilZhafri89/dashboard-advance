@@ -441,6 +441,20 @@ def load_diri():
 
     return df
 
+#helperloadonce#
+
+def load_data_once():
+    if "df_bekalan_raw" not in st.session_state:
+        st.session_state["df_bekalan_raw"] = load_bekalan()
+    if "df_diri_raw" not in st.session_state:
+        st.session_state["df_diri_raw"] = load_diri()
+
+    return (
+        st.session_state["df_bekalan_raw"],
+        st.session_state["df_diri_raw"],
+    )
+
+
 
 #Untuk date today#
 
@@ -505,7 +519,8 @@ st.title("Dashboard Pendahuluan Diri dan Bekalan")
 with st.sidebar:
     st.header("Tapisan")
 
-    all_data = pd.concat([load_bekalan(), load_diri()], ignore_index=True)
+    df_bekalan_raw, df_diri_raw = load_data_once()
+    all_data = pd.concat([df_bekalan_raw, df_diri_raw], ignore_index=True)
     all_data = add_tempoh_column(all_data)
 
     jenis_list = ["All"] + sorted(all_data["Detail"].dropna().unique().tolist())
@@ -526,6 +541,14 @@ with st.sidebar:
     tempoh_list = ["All"] + sorted(data_for_tempoh["Tempoh"].dropna().unique().tolist())
     selected_tempoh = st.selectbox("Tempoh", tempoh_list)
 
+    st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
+
+    if st.button("🔄 Refresh Data", use_container_width=True):
+        st.session_state.pop("df_bekalan_raw", None)
+        st.session_state.pop("df_diri_raw", None)
+        st.experimental_rerun()
+
+
 
 
 
@@ -540,8 +563,9 @@ with st.sidebar:
 
 # --- Load & apply filters for BOTH datasets first ---
 # --- Load & apply filters for BOTH datasets first ---
-df_bekalan = load_bekalan()
-df_diri = load_diri()
+df_bekalan_raw, df_diri_raw = load_data_once()
+df_bekalan = df_bekalan_raw.copy()
+df_diri = df_diri_raw.copy()
 
 # Add Tempoh column BEFORE any filters
 df_bekalan = add_tempoh_column(df_bekalan)
