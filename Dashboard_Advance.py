@@ -5,6 +5,14 @@ import plotly.express as px
 import numpy as np
 from datetime import datetime
 
+def to_amount(series: pd.Series) -> pd.Series:
+    return pd.to_numeric(
+        series.astype(str)
+              .str.replace(",", "", regex=False)   # buang comma ribu
+              .str.replace("(", "-", regex=False)  # optional: (1,000.00) -> -1000.00
+              .str.replace(")", "", regex=False),
+        errors="coerce"
+    )
 
 
 st.set_page_config(page_title="Dashboard Advance", layout="wide")
@@ -389,7 +397,8 @@ def load_diri():
         df = df[df["Posting Date"].notna()]
 
     # 2) Contra logic: build key = Reference + ABS(Amount)
-    amount_abs = df["Amount in local currency"].astype(float).abs().round(2)
+    df["Amount_num"] = to_amount(df["Amount in local currency"])
+    amount_abs = df["Amount_num"].abs().round(2)
 
     df["ContraKey"] = (
         df["Reference"].astype(str).str.strip()
@@ -397,7 +406,7 @@ def load_diri():
         + amount_abs.astype(str)
     )
 
-    grp = df.groupby("ContraKey")["Amount in local currency"].agg(["min", "max"])
+    grp = df.groupby("ContraKey")["Amount_num"].agg(["min", "max"])
     keys_to_remove = grp[(grp["min"] < 0) & (grp["max"] > 0)].index
 
     # Remove all fully-contra rows
@@ -589,8 +598,9 @@ if selected_tempoh != "All":
 # -------------------------
 # KPI CARDS
 # -------------------------
-total_bekalan = df_bekalan["Amount in local currency"].sum() if not df_bekalan.empty else 0
-total_diri = df_diri["Amount in local currency"].sum() if not df_diri.empty else 0
+total_bekalan = to_amount(df_bekalan["Amount in local currency"]).sum() if not df_bekalan.empty else 0
+total_diri    = to_amount(df_diri["Amount in local currency"]).sum() if not df_diri.empty else 0
+
 
 col1, col2 = st.columns(2)
 
@@ -619,12 +629,15 @@ df_diri_bar["Jenis"] = "Pendahuluan Diri"
 
 df_all_bar = pd.concat([df_bekalan_bar, df_diri_bar], ignore_index=True)
 
+df_all_bar["Amount_num"] = to_amount(df_all_bar["Amount in local currency"])
+
 if not df_all_bar.empty:
     df_bar_agg = (
         df_all_bar
         .dropna(subset=["PTJ"])
-        .groupby("PTJ", as_index=False)["Amount in local currency"]
+        .groupby("PTJ", as_index=False)["Amount_num"]
         .sum()
+        .rename(columns={"Amount_num": "Amount in local currency"})
     )
 
     df_bar_agg["is_HQ"] = (df_bar_agg["PTJ"] == "HQ").astype(int)
@@ -734,9 +747,8 @@ df_bekalan_display["Posting Date"] = pd.to_datetime(
 
 # Format Amount → currency
 df_bekalan_display["Amount in local currency"] = (
-    df_bekalan_display["Amount in local currency"]
-    .astype(float)
-    .map("{:,.2f}".format)
+    to_amount(df_bekalan_display["Amount in local currency"]
+    ).map(lambda x: f"{x:,.2f}" if pd.notna(x) else "")
 )
 
 
@@ -777,9 +789,8 @@ df_diri_display["Posting Date"] = pd.to_datetime(
 
 # Format Amount → currency
 df_diri_display["Amount in local currency"] = (
-    df_diri_display["Amount in local currency"]
-    .astype(float)
-    .map("{:,.2f}".format)
+    to_amount(df_diri_display["Amount in local currency"]
+    ).map(lambda x: f"{x:,.2f}" if pd.notna(x) else "")
 )
 
 st.dataframe(df_diri_display, use_container_width=True)
