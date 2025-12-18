@@ -106,7 +106,6 @@ section[data-testid="stSidebar"] {
 }
 
 
-}
 
 /* Sidebar header */
 section[data-testid="stSidebar"] h1,
@@ -219,25 +218,25 @@ div[data-testid="stAppViewContainer"] h1 {
 # -------------------------
 BASE_FOLDER = Path(__file__).parent
 
+# === DRIVE FILE IDs (CSV) ===
+BEKALAN_ID  = "1RHCb2PFh_SwMPDzUoy2-0rx8j-ASzc4g"
+DIRI_ID     = "1KP7lztylfDbMGq_QCJPYO_SD9c_snqIm"
+STAFDIRI_ID = "14YCpPzy_1NyxD7r4N0ZwvgWaUOG3t2iT"
+
+def drive_csv_url(file_id: str) -> str:
+    return f"https://drive.google.com/uc?export=download&id={file_id}"
 
 
-CSV_BEKALAN = BASE_FOLDER / "GL Advance bekalan.csv"
-CSV_DIRI    = BASE_FOLDER / "GL Advance diri.csv"
+CSV_BEKALAN   = drive_csv_url(BEKALAN_ID)
+CSV_DIRI      = drive_csv_url(DIRI_ID)
+CSV_STAF_DIRI = drive_csv_url(STAFDIRI_ID)
 CSV_PTJ     = BASE_FOLDER / "DimPTJ.csv"   # PTJ file
-CSV_STAF_DIRI = BASE_FOLDER / "LIST ID STAF ADVANCE DIRI.csv"
 
-from datetime import datetime
+
+
 import os
 
 
-def file_token(p: Path) -> float:
-    return os.path.getmtime(p) if p.exists() else 0.0
-
-def get_last_modified_date(*paths):
-    latest_ts = max(os.path.getmtime(p) for p in paths if os.path.exists(p))
-    return datetime.fromtimestamp(latest_ts).strftime("%d %b %Y")
-
-last_update = get_last_modified_date(CSV_BEKALAN, CSV_DIRI)
 
 
 # -------------------------
@@ -527,20 +526,6 @@ with st.sidebar:
     tempoh_list = ["All"] + sorted(data_for_tempoh["Tempoh"].dropna().unique().tolist())
     selected_tempoh = st.selectbox("Tempoh", tempoh_list)
 
-    # ===== TARIKH KEMASKINI (BWH SEKALI) =====
-    st.markdown("<div style='height: 24px;'></div>", unsafe_allow_html=True)
-
-    st.markdown(
-        f"""
-        <div class="sidebar-bottom">
-          <div class="update-card">
-            <div class="title">Tarikh Kemaskini:</div>
-            <div class="date">{last_update}</div>
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
 
 
